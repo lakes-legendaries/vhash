@@ -1,0 +1,6 @@
+# virtual environments
+.venv
+
+# build folders
+build
+vhash.egg-info
