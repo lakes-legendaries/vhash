@@ -53,4 +53,9 @@
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
     "restructuredtext.confPath": "",
+    "C_Cpp.intelliSenseEngineFallback": "Disabled",
+    "files.associations": {
+        "cli": "python",
+        "vector": "cpp"
+    },
 }

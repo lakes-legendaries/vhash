@@ -3,4 +3,6 @@
 
 # build folders
 build
+cxx/bin/*.exe
+cxx/bin/*.o
 vhash.egg-info
