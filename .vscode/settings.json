@@ -1,9 +1,6 @@
 {
-    // python settings
-    "python.pythonPath": "/home/mike/vhash/.venv/bin/python",
-    
     // rewrap settings
-    "rewrap.wrappingColumn": 78,
+    "rewrap.wrappingColumn": 79,
     "rewrap.wholeComment": false,
 
     // autocomplete settings
@@ -52,10 +49,22 @@
     "outline.showVariables": false,
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
+
+    // rst settings
     "restructuredtext.confPath": "",
+    "restructuredtext.languageServer.disabled": true,
+
+    // c++ settings
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
+
+    // file associations
     "files.associations": {
         "cli": "python",
-        "vector": "cpp"
+        "vector": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "*.tcc": "cpp"
     },
 }
