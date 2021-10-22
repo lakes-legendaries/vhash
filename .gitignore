@@ -1,8 +1,17 @@
-# virtual environments
-.venv
-
 # build folders
-build
-cxx/bin/*.exe
-cxx/bin/*.o
-*.egg-info
+/build
+/cxx/bin/*.exe
+/cxx/bin/*.o
+/*.egg-info
+
+# documents
+/docs
+
+# ide files
+/.vscode
+
+# test files
+**/__pycache__
+
+# virtual environments
+/.venv

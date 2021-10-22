@@ -8,7 +8,14 @@ this package is for you. This package provides vectorizing hash tables that
 quickly transform your text, learning numeric representations from
 class-labeled training documents.
 
-To get started, check out the `docs <https://lakes-legendaries.github.io/vhash/>`_!
+Check out this repo on `GitHub <https://github.com/lakes-legendaries/vhash>`_!
 
-If you will be contributing to this repo, checkout the
-`developer guide <https://lakes-legendaries.github.io/vhash/dev.html>`_.
+*****************
+Table Of Contents
+*****************
+.. toctree::
+    :maxdepth: 1
+
+    logic
+    api
+    dev
