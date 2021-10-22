@@ -8,6 +8,9 @@ this package is for you. This package provides vectorizing hash tables that
 quickly transform your text, optimizing for the maximum distance between
 document-class vectors.
 
+This project has a C++ backend with a python interface, allowing for maximum
+speed and maximum interopability.
+
 To get started, check out the `docs <https://lakes-legendaries.github.io/vhash/>`_!
 
 If you will be contributing to this repo, checkout the
