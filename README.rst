@@ -12,3 +12,4 @@ To get started, check out the `docs <https://lakes-legendaries.github.io/vhash/>
 
 If you will be contributing to this repo, checkout the
 `developer guide <https://lakes-legendaries.github.io/vhash/dev.html>`_.
+ 
