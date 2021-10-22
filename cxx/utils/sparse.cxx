@@ -12,18 +12,18 @@ Sparse::Sparse(
    indices(indices_) {}
 
 float Sparse::dot_product(const Sparse& multiplier) const {
-	float out = 0;
-	for (size_t i = 0, m_i = 0; i < num_nonzero(); i++) {
-		while (indices[i] > multiplier.indices[m_i]) {
-			if (++m_i == multiplier.num_nonzero()) {
+    float out = 0;
+    for (size_t i = 0, m_i = 0; i < num_nonzero(); i++) {
+        while (indices[i] > multiplier.indices[m_i]) {
+            if (++m_i == multiplier.num_nonzero()) {
                 return out;
             }
-		}
-		if (indices[i] == multiplier.indices[m_i]) {
+        }
+        if (indices[i] == multiplier.indices[m_i]) {
             out += values[i] * multiplier.values[m_i];
         }
-	}
-	return out;
+    }
+    return out;
 }
 
 float Sparse::dot_product(const vector <float>& multiplier) const {

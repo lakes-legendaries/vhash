@@ -101,7 +101,7 @@ void VHash::_create_table(
                 } else {
                     (*element).second++;
                 }
-	        }
+            }
         }
 
         // Knock table down to a reasonable size

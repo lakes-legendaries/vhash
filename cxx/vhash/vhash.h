@@ -228,10 +228,10 @@ namespace vhash {
                 const vector <string>& docs
             );
 
-			// ===============================================================
+            // ===============================================================
             // text preprocessing
 
-			// break document into vector of phrases
+            // break document into vector of phrases
             vector <string> _break_into_phrases(const string& doc) const; // document -> vector of phrases
 
             // ===============================================================

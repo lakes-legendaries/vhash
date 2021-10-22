@@ -1,4 +1,4 @@
-SHELL     = /bin/bash
+SHELL	  = /bin/bash
 CXX_FLAGS = -std=c++17 -Wall -Wextra -O3 -I $(shell pwd)
 CXX_DIRS  = utils vhash
 CXX_FILES = $(notdir $(wildcard $(patsubst %,%/*.cxx,$(CXX_DIRS))))
