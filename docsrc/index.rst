@@ -17,5 +17,6 @@ Table Of Contents
     :maxdepth: 1
 
     logic
+    install
     api
     dev
