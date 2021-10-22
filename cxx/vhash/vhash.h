@@ -16,69 +16,9 @@ namespace vhash {
 
     /* Hash table for vector quantization of text documents
 
-    This class supplies custom-trained hash tables that perform fast vector
-    quantization of your documents. To train this class, you must provide it
-    with documents and with a single class label for each document.
-
-    This class differs from many commonly-used methods and packages (e.g. BERT,
-    BOW, TFIDF) in that it learns its representation from your class labels,
-    instead of using some generalized scheme that is not specific to the task
-    at hand.
-
-    To compute a phrase's weight
-
-    #. Compute the phrase's document frequency. A phrase's document frequency
-       is the number of documents it appears in in the training set.
-
-    #. Compute the phrase's expected document frequency, if it were evenly
-       distributed among all classes. E.g. if a phrase appears in 82% of
-       documents, we'd expect that phrase to occur in 82% of the documents
-       belonging to each class, if that phrase were evenly distributed.
-    
-    #. Compute the actual document frequency of each class. E.g. a term might
-       occur in 20% of the documents from one class, and 90% of the documents from
-       another class.
-
-    #. Compute each phrase's weight as:
-
-           `\sqrt( \sum_c( |expected_freq_c - actual_freq_c|^2 ) )`
-    
-       where `sum_c` is the sum over each class, `expected_freq_c` is the
-       expected frequency for class `c`, and `actual_freq_c` is the actual
-       frequency for class `c`.
-
-    To vectorize a document, the following procedure is followed:
-
-    #. Each phrase in the document that exists in the hash table is counted.
-       This creates a sparse integer array, where each index in the array
-       corresponds to a single phrase.
-
-    #. The count of each phrase is transformed via
-
-           `count -> log(1 + count) `
-
-       This creates a sparse floating-point array.
-    
-    #. Each phrase is multiplied by its weight. This modifies the existing
-       sparse floating-point array.
-
-    #. This sparse floating-point array is L2 normalized.
-
-    #. Sparse arrays are then transformed into information-rich dense arrays
-       by comparing them with previously-saved features.
-
-       Features are simply documents that were used during fitting, and are
-       saved by the model. These documents are converted into sparse arrays
-       following the procedure listed above.
-
-       The resulting dense array is a 1 x `num_features` array, where each
-       entry is computed as
-
-           `dense[feature_num] = sparse_array * feature[feature_num]`
-
-    This process thus creates information-rich dense representations of text
-    documents, learning heavily from the training data.
-     */
+    Check out the documentation for a full description of this class's
+    operations.
+    */
     class VHash {
         public:
 
