@@ -5,8 +5,8 @@ VHash: Vectorizing Hash Tables
 If you have documents with class labels, and you want to create numeric
 representations of those documents that maximize inter-class differences, then
 this package is for you. This package provides vectorizing hash tables that
-quickly transform your text, learning numeric representations from
-class-labeled training documents.
+quickly transform your text, optimizing for the maximum distance between
+document-class vectors.
 
 To get started, check out the `docs <https://lakes-legendaries.github.io/vhash/>`_!
 
