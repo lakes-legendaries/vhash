@@ -19,7 +19,7 @@ Table Of Contents
 .. toctree::
     :maxdepth: 1
 
+    quickstart
     logic
-    install
     api
     dev

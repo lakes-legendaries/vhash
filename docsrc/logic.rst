@@ -1,6 +1,8 @@
-########
-Overview
-########
+##############
+Logic Overview
+##############
+
+Here, we provide an overview of the motivation and logic of this package.
 
 **********
 Motivation
