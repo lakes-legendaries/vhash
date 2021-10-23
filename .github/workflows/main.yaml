@@ -13,6 +13,26 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+          python-version: 3.9
+    - name: Install environment
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install .
+    - name: Test code (C++)
+      run: |
+        cd cxx
+        make all
+        make test
+        cd ..
+    - name: Test code (python)
+      run: |
+        pytest
     - name: Configure git
       run: |
         git config --global user.name "version bot"
@@ -29,23 +49,10 @@ jobs:
         git tag $NEW_VERSION
         git push origin main:main
         git push origin $NEW_VERSION
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-          python-version: 3.9
     - name: Update documentation
       run: |
-        python -m venv .venv
-        source .venv/bin/activate
-        pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install .
         docsrc/build
-    - name: Configure git
-      run: |
-        git config --global user.name "version bot"
-        git config --global user.email "<>"
-    - name: Publish to GitHub pages
+    - name: Publish docs to GitHub pages
       run: |
         git add docs -f
         git commit docs -m "Updating Documentation"
