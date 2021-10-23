@@ -38,11 +38,12 @@ jobs:
       run: |
         git config --global user.name "version bot"
         git config --global user.email "<>"
-    - name: Use token
+    - name: Authenticate with github personal access token
       env:
         GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
       run: |
         git remote set-url origin https://$GIT_TOKEN@github.com/lakes-legendaries/vhash.git
+        git remote get-url origin
     - name: Increment version, tag branch, push to main
       run: |
         OLD_VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
