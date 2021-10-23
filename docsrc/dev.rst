@@ -16,7 +16,7 @@ Developer Notes
 
 #. To test the python bindings, use pytest, e.g.:
 
-   .. code-block:: console
+   .. code-block:: bash
 
        python -m venv .venv
        source .venv/bin/activate

@@ -8,7 +8,7 @@ Installation
 
 To install, use :code:`pip`:
 
-.. code-block:: console
+.. code-block:: bash
 
     pip install git+https://github.com/lakes-legendaries/vhash.git
 
