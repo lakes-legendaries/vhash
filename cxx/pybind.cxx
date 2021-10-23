@@ -17,23 +17,33 @@ PYBIND11_MODULE(vhash, m) {
             Parameters
             ----------
             largest_ngram: int, optional, default=3
-                max # of words to take as a single phrase
+                Maximum number of words to take as a single phrase.
+                This table's vocabulary will consist of phrases from
+                1 word long to :code:`largest_ngram` words long.
             min_phrase_occurrence: float, default=1E-3
+                Only the most common phrases are kept. Uncommon phrases
+                are removed if the total count of that phrase across all
+                training documents meets the following criteria:
 
                 .. code-block:: python
 
                     if min_phrase_occurrence < 1:
-                        remove from table iff count < min_phrase_occurrence * docs.size()
+                        remove from table if count < min_phrase_occurrence * docs.size()
                     else:
-                        remove from table iff count < min_phrase_occurrence
+                        remove from table if count < min_phrase_occurrence
 
             num_features: int, optional, default=1E3
                 number of features to compute
-                (which equals the dimension of each output dense vector)
+                (which equals the dimension of each output dense vector).
+                If fewer training documents than this are used when fitting,
+                then :code:`num_features` will be reduced to the number
+                of training documents.
             max_num_phrases: int, optional, default=1E6
-                maximum size of term vocabulary
+                maximum size of term vocabulary, including phrases of all
+                lengths
             downsample_to: int, optional, default=100E3
-                max number of documents to use when fitting
+                maximum number of documents to use when fitting.
+                If more are provided, then documents are downsampled
             live_evaluation_step: int, optional, default=10E3
                 when fitting a table, to speed things up, infrequent terms
                 are removed every :code:`live_evaluation_step` number of

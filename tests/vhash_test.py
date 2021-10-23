@@ -31,6 +31,7 @@ def test_fit():
     vhash = VHash().fit(docs, labels)
     transformed = array(vhash.transform(docs))
     check_result(transformed)
+    assert((array(vhash.transform(['name'])) == 0).all())
 
 
 def test_fit_transform():

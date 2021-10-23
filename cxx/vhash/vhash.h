@@ -22,25 +22,9 @@ namespace vhash {
     class VHash {
         public:
 
-            /* Hash table for vector quantization of text documents
-
-            Parameters
-            ----------
-            largest_ngram: const size_t&
-                max # of words to take as a single phrase
-            min_phrase_occurrence: const float&
-                if min_phrase_occurrence < 1:
-                    remove from table iff count < min_phrase_occurrence * docs.size()
-                else:
-                    remove from table iff count < min_phrase_occurrence
-            num_features: const size_t&
-                # of features to compute ( == dimension of each dense vector)
-            max_num_phrases: const size_t&
-                largest allowed size for any vhash table (0 -> off)
-            downsample_to: const size_t&
-                max # to keep when constructing (random downsample) (-1 -> off)
-            live_evaluation_step: const size_t&
-                remove infreq elements, if max_num_phrases reached, every X documents
+            /* Constructor
+            
+            Check out docs or cxx/pybind.cxx for full docstring
              */
             VHash(
                 const size_t& largest_ngram = 3,
@@ -51,45 +35,24 @@ namespace vhash {
                 const size_t& live_evaluation_step = 10E3
             );
 
-            /* virtual destructor */
+            /* virtual destructor
+            
+            Check out docs or cxx/pybind.cxx for full docstring
+             */
             virtual ~VHash() {}
 
             /* Train model
-
-            Parameters
-            ----------
-            docs: const vector <string>&
-                documents to use to train model
-            labels: const vector <size_t>&
-                class label for each document.
-                Assumes that classes are numbered sequentially, starting at zero.
             
-            Returns
-            -------
-            VHash
-                Calling object
+            Check out docs or cxx/pybind.cxx for full docstring
              */
             VHash fit(
                 const vector <string>& docs,
                 const vector <size_t>& labels
             );
 
-            /* Fit model, transform docs 
-
-            Parameters
-            ----------
-            docs: const vector <string>&
-                documents to use to train model, then to transform
-            labels: const vector <size_t>&
-                class label for each document
-                Assumes that classes are numbered sequentially, starting at zero.
-
-            Returns
-            -------
-            vector <vector <float>> rep
-                Numeric representation of documents
-                rep[x] is for docs[x]
-                rep[x].size() == num_features (set in constructor)
+            /* Fit model, transform docs
+            
+            Check out docs or cxx/pybind.cxx for full docstring
              */
            vector <vector <float>> fit_transform(
                 const vector <string>& docs,
@@ -97,18 +60,8 @@ namespace vhash {
             );
 
             /* Transform docs, using fitted model
-
-            Parameters
-            ----------
-            docs: const vector <string>&
-                documents to transform
-
-            Returns
-            -------
-            vector <vector <float>> rep
-                Numeric representation of documents
-                rep[x] is for docs[x]
-                rep[x].size() == num_features (set in constructor)
+            
+            Check out docs or cxx/pybind.cxx for full docstring
              */
             vector <vector <float>> transform(
                 const vector <string>& docs

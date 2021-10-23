@@ -45,7 +45,7 @@ template <class Z>
 float utils::maths::norm(const vector <Z>& vec) {
     float out = 0;
     for (size_t g = 0; g < vec.size(); g++) {
-        out += vec[g] * vec[g];
+        out += pow(vec[g], 2);
     }
     return std::sqrt(out);
 }
@@ -54,6 +54,7 @@ template <class Z>
 vector <Z> utils::maths::normalize(const vector <Z>& vec) {
     if (vec.empty()) {return vector <Z>();}
     float vec_norm = norm(vec);
+    if (vec_norm == 0) {return vec;}
     vector <Z> out(vec.size());
     for (size_t g = 0; g < vec.size(); g++) {
         out[g] = vec[g] / vec_norm;
