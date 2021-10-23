@@ -36,4 +36,4 @@ intuitive and familiar interface.
     vhash = VHash().fit(docs, labels)
 
     # create numeric representation
-    numeric = vhash.transform(docs)
+    numeric: list[list[float]] = vhash.transform(docs)
