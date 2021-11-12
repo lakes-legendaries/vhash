@@ -23,7 +23,7 @@ namespace vhash {
         public:
 
             /* Constructor
-            
+
             Check out docs or cxx/pybind.cxx for full docstring
              */
             VHash(
@@ -36,13 +36,13 @@ namespace vhash {
             );
 
             /* virtual destructor
-            
+
             Check out docs or cxx/pybind.cxx for full docstring
              */
             virtual ~VHash() {}
 
             /* Train model
-            
+
             Check out docs or cxx/pybind.cxx for full docstring
              */
             VHash fit(
@@ -51,7 +51,7 @@ namespace vhash {
             );
 
             /* Fit model, transform docs
-            
+
             Check out docs or cxx/pybind.cxx for full docstring
              */
            vector <vector <float>> fit_transform(
@@ -60,12 +60,24 @@ namespace vhash {
             );
 
             /* Transform docs, using fitted model
-            
+
             Check out docs or cxx/pybind.cxx for full docstring
              */
             vector <vector <float>> transform(
                 const vector <string>& docs
             );
+
+            /* Save to file
+
+            Check out docs or cxx/pybind.cxx for full docstring
+             */
+            void save(const string& fname) const;
+
+            /* Load from file
+
+            Check out docs or cxx/pybind.cxx for full docstring
+             */
+            static VHash load(const string& fname);
 
             /* public access to testing private methods */
             static void _test();
@@ -108,7 +120,7 @@ namespace vhash {
                 const vector <string>& docs,
                 const vector <char>& insert_me
             );
-            
+
             // compute weight of each term
             void _compute_weights(
                 const vector <string>& docs,
@@ -151,6 +163,7 @@ namespace vhash {
             static void _test_weights();
             static void _test_vectorization();
             static void _test_transform();
+            static void _test_io();
     };
 }
 #endif

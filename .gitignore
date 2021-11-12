@@ -1,5 +1,6 @@
 # build folders
 /build
+/cxx/bin/*.bin
 /cxx/bin/*.exe
 /cxx/bin/*.o
 /*.egg-info

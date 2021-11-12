@@ -9,4 +9,4 @@ VHash
 *****
 
 .. autoclass:: vhash.VHash
-    :members: fit, fit_transform, transform
+    :members: fit, fit_transform, transform, save, load

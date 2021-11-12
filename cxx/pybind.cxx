@@ -134,5 +134,36 @@ PYBIND11_MODULE(vhash, m) {
 
             )STRING_LITERAL",
             py::arg("docs")
+        )
+        .def(
+            "save",
+            &vhash::VHash::save,
+            R"STRING_LITERAL(
+                Save model to file
+
+                Parameters
+                ----------
+                fname: str
+                    name of output file
+            )STRING_LITERAL",
+            py::arg("fname")
+        )
+        .def_static(
+            "load",
+            &vhash::VHash::load,
+            R"STRING_LITERAL(
+                Load model from file
+
+                Parameters
+                ----------
+                fname: str
+                    name of input file
+
+                Returns
+                -------
+                VHash
+                    instance loaded from file
+            )STRING_LITERAL",
+            py::arg("fname")
         );
 }

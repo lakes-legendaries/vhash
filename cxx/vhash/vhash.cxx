@@ -1,5 +1,6 @@
 #include <cassert>
 
+#include <utils/files.h>
 #include <utils/manip.h>
 #include <utils/maths.h>
 #include <utils/text.h>
@@ -70,6 +71,94 @@ vector <vector <float>> VHash::transform(
     return out;
 }
 
+void VHash::save(const string& fname) const {
+
+    // open file
+    ofstream file = files::open <ofstream>(fname);
+    
+    // save parameters
+    files::binary_write(file, _largest_ngram);
+    files::binary_write(file, _min_phrase_occurrence);
+    files::binary_write(file, _num_features);
+    files::binary_write(file, _max_num_phrases);
+    files::binary_write(file, _downsample_to);
+    files::binary_write(file, _live_evaluation_step);
+    files::binary_write(file, _num_docs);
+
+    // save hash table
+    files::binary_write(file, _table.size());
+    for (auto it = _table.begin(); it != _table.end(); it++) {
+        files::binary_write(file, (*it).first);
+        files::binary_write(file, (*it).second);
+    }
+
+    // save features
+    files::binary_write(file, _features.size());
+    for (auto feature: _features) {
+        files::binary_write(file, feature.max_index);
+        files::binary_write(file, feature.values);
+        files::binary_write(file, feature.indices);
+    }
+
+    // save weights
+    files::binary_write(file, _weights);
+
+    // close file
+    file.close();
+}
+
+VHash VHash::load(const string& fname) {
+
+    // open file
+    ifstream file = files::open <ifstream>(fname);
+
+    // load parameters
+    size_t _largest_ngram         = files::binary_read <size_t>(file);
+    float  _min_phrase_occurrence = files::binary_read <float >(file);
+    size_t _num_features          = files::binary_read <size_t>(file);
+    size_t _max_num_phrases       = files::binary_read <size_t>(file);
+    size_t _downsample_to         = files::binary_read <size_t>(file);
+    size_t _live_evaluation_step  = files::binary_read <size_t>(file);
+    size_t _num_docs              = files::binary_read <size_t>(file);
+
+    // initialize instance
+    VHash out(
+        _largest_ngram,
+        _min_phrase_occurrence,
+        _num_features,
+        _max_num_phrases,
+        _downsample_to,
+        _live_evaluation_step
+    );
+    out._num_docs = _num_docs;
+
+    // load in hash table
+    size_t table_size = files::binary_read <size_t>(file);
+    for (size_t g = 0; g < table_size; g++) {
+        string key   = files::binary_read <string>(file);
+        size_t value = files::binary_read <size_t>(file);
+        out._table.insert(std::pair <string, size_t>(key, value));
+    }
+
+    // load in features
+    size_t features_size = files::binary_read <size_t>(file);
+    for (size_t g = 0; g < features_size; g++) {
+        size_t max_index = files::binary_read <size_t>(file);
+        vector <float>  values  = files::binary_read_vec <float> (file);
+        vector <size_t> indices = files::binary_read_vec <size_t>(file);
+        out._features.push_back(Sparse(max_index, values, indices));
+    }
+
+    // load in weights
+    out._weights = files::binary_read_vec <float>(file);
+
+    // close file
+    file.close();
+
+    // return
+    return out;
+}
+
 void VHash::_test() {
     _test_basic_creation();
     _test_min_phrase_occurrence();
@@ -77,6 +166,7 @@ void VHash::_test() {
     _test_weights();
     _test_vectorization();
     _test_transform();
+    _test_io();
 }
 
 void VHash::_create_table(
@@ -155,7 +245,7 @@ void VHash::_compute_weights(
         // count each phrase, once for each doc
         vector <char> in_doc(_table.size(), 0);
         for (const string& phrase: phrases) {
-            
+
             // find element in table, skip if DNE
             auto element = _table.find(phrase);
             if (element == _table.end()) {continue;}
@@ -346,4 +436,32 @@ void VHash::_test_transform() {
     assert(maths::isclose(doc_vecs[2][2], 1));
     assert(doc_vecs[0][2] > doc_vecs[0][1]);
     assert(doc_vecs[2][0] > doc_vecs[2][1]);
+}
+
+void VHash::_test_io() {
+
+    // make data and train model
+    auto data = VHash::_get_test_data();
+    VHash vhash = VHash().fit(data.first, data.second);
+
+    // transform docs
+    vector <vector <float>> vecs = vhash.transform(data.first);
+
+    // save model to file
+    vhash.save("bin/test.bin");
+
+    // load model from file
+    VHash vhash2 = VHash::load("bin/test.bin");
+
+    // transform docs again
+    vector <vector <float>> vecs2 = vhash2.transform(data.first);
+
+    // check results
+    assert(vecs.size() == vecs2.size());
+    for (size_t g = 0; g < vecs.size(); g++) {
+        assert(vecs[g].size() == vecs2[g].size());
+        for (size_t h = 0; h < vecs[g].size(); h++) {
+            assert(vecs[g][h] == vecs2[g][h]);
+        }
+    }
 }
