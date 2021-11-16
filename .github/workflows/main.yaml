@@ -85,6 +85,7 @@ jobs:
         pip install -r requirements.txt
         docsrc/build
     - name: Push to main
+      run: |
         VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
         git push origin main:main
         git push origin $VERSION
