@@ -20,13 +20,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
           python-version: ${{ matrix.PYTHON_VERSION }}
-    - name: Install environment
-      run: |
-        python -m venv .venv
-        source .venv/bin/activate
-        pip install --upgrade pip
-        pip install nptyping numpy pytest
-        pip install .
     - name: Test code (C++)
       run: |
         cd cxx
@@ -35,18 +28,25 @@ jobs:
         cd ..
     - name: Test code (python)
       run: |
+        python -m venv .venv
         source .venv/bin/activate
+        pip install --upgrade pip
+        pip install nptyping numpy pytest
+        pip install .
         pytest
+        deactivate
+        rm -rfd .venv
     - name: Test requirements (python3.9)
       run: |
         if [[ "${{ matrix.PYTHON_VERSION }}" == "3.9" ]]; then
-          rm -rfd .venv
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
           pip install .
           pip install -r requirements.txt
           pytest
+          deactivate
+          rm -rfd .venv
         fi
 
   release:
