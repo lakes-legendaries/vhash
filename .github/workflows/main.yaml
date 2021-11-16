@@ -91,6 +91,7 @@ jobs:
         source .venv/bin/activate
         python -m build
         python -m twine upload dist/*.tar.gz -u __token__ -p $PYPI_TOKEN
+    - name: Push to main
       run: |
         VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
         git push origin main:main
