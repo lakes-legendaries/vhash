@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
         # requirements
         install_requires=[],
-        python_requires='>=3.5',
+        python_requires='>=3.7',
 
         # pybind11 code
         cmdclass={"build_ext": build_ext},

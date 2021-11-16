@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from math import isclose
 from os import remove
 from typing import Any
