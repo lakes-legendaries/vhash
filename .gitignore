@@ -3,6 +3,7 @@
 /cxx/bin/*.bin
 /cxx/bin/*.exe
 /cxx/bin/*.o
+/dist
 /*.egg-info
 
 # documents

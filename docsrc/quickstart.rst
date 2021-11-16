@@ -10,7 +10,7 @@ To install, use :code:`pip`:
 
 .. code-block:: bash
 
-    pip install git+https://github.com/lakes-legendaries/vhash.git
+    pip install vhash
 
 ***********************
 Minimum Working Example

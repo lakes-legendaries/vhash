@@ -84,7 +84,13 @@ jobs:
         pip install .
         pip install -r requirements.txt
         docsrc/build
-    - name: Push to main
+    - name: Publish to PyPi
+      env:
+        PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+      run: |
+        source .venv/bin/activate
+        python -m build
+        python -m twine upload dist/*.tar.gz -u __token__ -p $PYPI_TOKEN
       run: |
         VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
         git push origin main:main

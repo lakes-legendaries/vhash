@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
         # longer info
         long_description=open('README.rst').read(),
-        license=open('LICENSE').read(),
+        license='MIT License',
 
         # packages to include
         packages=find_packages(),
@@ -33,6 +33,20 @@ if __name__ == '__main__':
         # requirements
         install_requires=[],
         python_requires='>=3.7',
+
+        # urls
+        project_urls={
+            "Documentation": "https://lakes-legendaries.github.io/vhash/",
+            "GitHub": "https://github.com/lakes-legendaries/vhash/",
+            "Bug Tracker": "https://github.com/lakes-legendaries/vhash/issues",
+        },
+
+        # classifiers
+        classifiers=[
+            "Programming Language :: Python :: 3",
+            "License :: OSI Approved :: MIT License",
+            "Operating System :: OS Independent",
+        ],
 
         # pybind11 code
         cmdclass={"build_ext": build_ext},

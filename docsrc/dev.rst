@@ -32,15 +32,18 @@ Developer Notes
 
    This package's code has been tested and developed using python3.9.7
 
-#. Documentation is automatically built through GitHub Actions, published to
-   the :code:`docs` branch to keep the :code:`main` branch light.
+#. With each push to main:
 
-   To test documentation, run :code:`docsrc/build`.
+   #. Documentation is automatically built and published to the :code:`docs`
+      branch (which keeps the :code:`main` branch light).
 
-   Do NOT check in documentation to your branch.
+      To test documentation, run :code:`docsrc/build`.
 
-#. The version number is automatically updated through GitHub Actions on each
-   push to main. With each update, the main branch is tagged with the version
-   number.
+      Do NOT check in documentation to your branch.
+
+   #. The version number is automatically updated, and the main branch is
+      tagged with the version number.
+   
+   #. The project is automatically uploaded to PyPi.
 
 #. Pull requests are welcome.
