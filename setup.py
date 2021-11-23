@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
         # standard info
         name='vhash',
-        version='0.0.17',
+        version='0.0.18',
         description='hash tables for vectorizing text-based documents',
         author='Mike Powell PhD',
         author_email='mike@lakeslegendaries.com',
