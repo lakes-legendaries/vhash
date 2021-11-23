@@ -90,10 +90,7 @@ jobs:
         git push origin actions:actions
     - name: Push to main
       run: |
-        git pull origin main:main
-        git checkout main
-        git merge actions
-        git push origin main:main
+        git push origin actions:main -f
     - name: Push tag
       run: |
         VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
