@@ -85,12 +85,17 @@ jobs:
         pip install .
         pip install -r requirements.txt
         docsrc/build
-    - name: Push to actions and main
+    - name: Push to actions
+      run: |
+        git push origin actions:actions
+    - name: Push to main
+      run: |
+        git checkout main
+        git merge actions
+        git push origin main:main
+    - name: Push tag
       run: |
         VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
-        git pull
-        git push origin actions:actions
-        git push origin actions:main
         git push origin $VERSION
     - name: Publish docs to GitHub pages (docs branch)
       run: |
