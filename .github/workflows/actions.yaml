@@ -1,11 +1,9 @@
-# on each push to main, increment version & refresh docs
-
-name: Post-push to main
+name: Actions
 
 on:
   push:
     branches:
-      - main
+      - actions
 
 jobs:
   test_code:
@@ -16,6 +14,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
+      with:
+        ref: actions
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
@@ -52,11 +52,12 @@ jobs:
   release:
     needs: test_code
     runs-on: ubuntu-latest
-    environment: main-actions
+    environment: actions
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
       with:
+        ref: actions
         token: ${{ secrets.GIT_TOKEN }}
     - name: Setup Python
       uses: actions/setup-python@v2
@@ -91,13 +92,14 @@ jobs:
         source .venv/bin/activate
         python -m build
         python -m twine upload dist/*.tar.gz -u __token__ -p $PYPI_TOKEN
-    - name: Push to main
+    - name: Push to actions && main
       run: |
         VERSION=$(grep version setup.py | grep -Po "\d+.\d+.\d+")
-        git push origin main:main
+        git push origin actions:actions
+        git push origin actions:main
         git push origin $VERSION
     - name: Publish docs to GitHub pages (docs branch)
       run: |
         git add docs -f
         git commit docs -m "Updating Documentation"
-        git push origin main:docs -f
+        git push origin actions:docs -f
