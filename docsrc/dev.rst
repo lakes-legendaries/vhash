@@ -2,48 +2,60 @@
 Developer Notes
 ###############
 
-#. The core code of this repo is written in C++, with a :code:`pybind11`
-   wrapping to make it available in python.
+#. Standards
 
-#. Numpydoc-style docstrings have been used in the C++ code, and every
-   reasonable effort has been made to follow the PEP8 standards in the C++
-   code.
+   #. The core code of this repo is written in C++, with a :code:`pybind11`
+      wrapping to make it available in python.
 
-#. To test your C++ code, run :code:`make test` in the :code:`cxx` folder.
+   #. Numpydoc-style docstrings have been used in the C++ code, and every
+      reasonable effort has been made to follow the PEP8 standards in the C++
+      code.
 
-   This code has been tested and developed using g++ (version 9.3.0) and gnu
-   make (version 4.2.1) on Ubuntu 20.04.03.
+#. Testing
 
-#. To test the python bindings, use pytest, e.g.:
+   #. To test your C++ code, run :code:`make test` in the :code:`cxx` folder.
 
-   .. code-block:: bash
+      This code has been tested and developed using g++ (version 9.3.0) and gnu
+      make (version 4.2.1) on Ubuntu 20.04.03.
 
-       python -m venv .venv
-       source .venv/bin/activate
-       pip install --upgrade pip
-       pip install -r requirements.txt
-       pip install .
-       pytest
+   #. To test the python bindings, use pytest, e.g.:
 
-   Please note that, because this uses a C++ module, you must run :code:`pip
-   install .` before running :code:`pytest`. Furthermore, the above code
-   snippet assumes that you have aliased :code:`python` to be your most recent
-   :code:`python3` version.
+      .. code-block:: bash
 
-   This package's code has been tested and developed using python3.9.7
+         python -m venv .venv
+         source .venv/bin/activate
+         pip install --upgrade pip
+         pip install -r requirements.txt
+         pip install .
+         pytest
 
-#. With each push to main:
+      Please note that, because this uses a C++ module, you must run :code:`pip
+      install .` before running :code:`pytest`. Furthermore, the above code
+      snippet assumes that you have aliased :code:`python` to be your most recent
+      :code:`python3` version.
 
-   #. Documentation is automatically built and published to the :code:`docs`
-      branch (which keeps the :code:`main` branch light).
+      This package's code has been tested and developed using python3.9.7
 
-      To test documentation, run :code:`docsrc/build`.
+#. Continuous Integration (CI)
 
-      Do NOT check in documentation to your branch.
+   NEVER merge into the :code:`main` branch. Instead, merge into the
+   :code:`actions` branch, and the following will be automatically performed:
 
-   #. The version number is automatically updated, and the main branch is
+   #. The code will be tested, and will NOT be merged into :code:`main` if
+      there are any errors. This testing will happen for all python versions
+      3.7-3.10
+
+   #. Documentation will be built and published to the :code:`docs` branch
+      (which keeps the :code:`main` branch light).
+
+      (To test documentation ahead of time, run :code:`docsrc/build`. NEVER
+      check in documentation to your branch.)
+
+   #. The version number will be updated, and the repo will be
       tagged with the version number.
-   
-   #. The project is automatically uploaded to PyPi.
+
+   #. The project will be automatically uploaded to PyPi.
+
+   #. All changes will be merged into:code:`main`.
 
 #. Pull requests are welcome.
