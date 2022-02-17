@@ -8,13 +8,13 @@ OBJ_FILES = $(patsubst %.cxx,bin/%.o,$(CXX_FILES))
 all: $(OBJ_FILES)
 
 bin/%.o: */%.cxx
-	@g++ $(CXX_FLAGS) -c -o $@ $<
+	@g++ $(CXX_FLAGS) -c -o $@ $< -D__CXX_TESTING__
 
 test: all dummy
 	@for FILE in tests/**/*.cxx; do \
 		EXE=bin/test.exe; \
 		rm -f $EXE; \
-		g++ $(CXX_FLAGS) -o $$EXE $$FILE $(OBJ_FILES); \
+		g++ $(CXX_FLAGS) -o $$EXE $$FILE $(OBJ_FILES) -D__CXX_TESTING__; \
 		$$EXE; \
 		rm $$EXE; \
 	done

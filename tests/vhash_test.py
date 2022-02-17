@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from math import isclose
-from os import remove
 from typing import Any
 
 from nptyping import NDArray
@@ -43,21 +43,17 @@ def test_fit_transform():
     check_result(transformed)
 
 
-def test_io():
-    temp_fname = 'tests/model.bin'
-    try:
-        docs, labels = get_data()
-        model = VHash().fit(docs, labels)
-        transformed = array(model.transform(docs))
-        model.save(temp_fname)
-        model2 = VHash.load(temp_fname)
-        transformed2 = array(model2.transform(docs))
-        assert((transformed == transformed2).all())
-    finally:
-        remove(temp_fname)
+def test_pickle():
+    docs, labels = get_data()
+    model = VHash().fit(docs, labels)
+    transformed = array(model.transform(docs))
+    model2 = deepcopy(model)
+    model = None
+    transformed2 = array(model2.transform(docs))
+    assert((transformed == transformed2).all())
 
 
 if __name__ == '__main__':
     test_fit()
     test_fit_transform()
-    test_io()
+    test_pickle()

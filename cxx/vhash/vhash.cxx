@@ -71,93 +71,99 @@ vector <vector <float>> VHash::transform(
     return out;
 }
 
-void VHash::save(const string& fname) const {
-
-    // open file
-    ofstream file = files::open <ofstream>(fname);
+#ifndef __CXX_TESTING__
+py::tuple VHash::__get_state__(const vhash::VHash &v) {
     
-    // save parameters
-    files::binary_write(file, _largest_ngram);
-    files::binary_write(file, _min_phrase_occurrence);
-    files::binary_write(file, _num_features);
-    files::binary_write(file, _max_num_phrases);
-    files::binary_write(file, _downsample_to);
-    files::binary_write(file, _live_evaluation_step);
-    files::binary_write(file, _num_docs);
-
-    // save hash table
-    files::binary_write(file, _table.size());
-    for (auto it = _table.begin(); it != _table.end(); it++) {
-        files::binary_write(file, (*it).first);
-        files::binary_write(file, (*it).second);
+    // serialize hash table
+    size_t hash_size = v._table.size();
+    vector <string> hash_keys;
+    vector <size_t> hash_values;
+    for (auto it = v._table.begin(); it != v._table.end(); it++) {
+        hash_keys.push_back((*it).first);
+        hash_values.push_back((*it).second);
     }
 
-    // save features
-    files::binary_write(file, _features.size());
-    for (auto feature: _features) {
-        files::binary_write(file, feature.max_index);
-        files::binary_write(file, feature.values);
-        files::binary_write(file, feature.indices);
+    // serialize features
+    size_t features_size = v._features.size();
+    vector <size_t> features_max_index;
+    vector <vector <size_t>> features_index;
+    vector <vector <float>> features_value;
+    for (auto feature: v._features) {
+        features_max_index.push_back(feature.max_index);
+        features_index.push_back(feature.indices);
+        features_value.push_back(feature.values);
     }
 
-    // save weights
-    files::binary_write(file, _weights);
-
-    // close file
-    file.close();
+    // return state
+    return py::make_tuple(
+        v._largest_ngram,
+        v._min_phrase_occurrence,
+        v._num_features,
+        v._max_num_phrases,
+        v._downsample_to,
+        v._live_evaluation_step,
+        v._num_docs,
+        hash_size,
+        hash_keys,
+        hash_values,
+        features_size,
+        features_max_index,
+        features_index,
+        features_value,
+        v._weights
+    );
 }
 
-VHash VHash::load(const string& fname) {
+VHash VHash::__set_state__(py::tuple t) {
+    
+    // initialize
+    VHash v;
+    size_t g = 0;
 
-    // open file
-    ifstream file = files::open <ifstream>(fname);
+    // set parameters
+    v._largest_ngram = t[g++].cast<size_t>();
+    v._min_phrase_occurrence = t[g++].cast<float>();
+    v._num_features = t[g++].cast<size_t>();
+    v._max_num_phrases = t[g++].cast<size_t>();
+    v._downsample_to = t[g++].cast<size_t>();
+    v._live_evaluation_step = t[g++].cast<size_t>();
+    v._num_docs = t[g++].cast<size_t>();
 
-    // load parameters
-    size_t _largest_ngram         = files::binary_read <size_t>(file);
-    float  _min_phrase_occurrence = files::binary_read <float >(file);
-    size_t _num_features          = files::binary_read <size_t>(file);
-    size_t _max_num_phrases       = files::binary_read <size_t>(file);
-    size_t _downsample_to         = files::binary_read <size_t>(file);
-    size_t _live_evaluation_step  = files::binary_read <size_t>(file);
-    size_t _num_docs              = files::binary_read <size_t>(file);
-
-    // initialize instance
-    VHash out(
-        _largest_ngram,
-        _min_phrase_occurrence,
-        _num_features,
-        _max_num_phrases,
-        _downsample_to,
-        _live_evaluation_step
-    );
-    out._num_docs = _num_docs;
-
-    // load in hash table
-    size_t table_size = files::binary_read <size_t>(file);
-    for (size_t g = 0; g < table_size; g++) {
-        string key   = files::binary_read <string>(file);
-        size_t value = files::binary_read <size_t>(file);
-        out._table.insert(std::pair <string, size_t>(key, value));
+    // reconstruct hash table
+    size_t hash_size = t[g++].cast<size_t>();
+    vector <string> hash_keys = t[g++].cast<vector <string>>();
+    vector <size_t> hash_values = t[g++].cast<vector <size_t>>();
+    for (size_t h = 0; h < hash_size; h++) {
+        v._table.insert(
+            std::pair <string, size_t>(
+                hash_keys[h],
+                hash_values[h]
+            )
+        );
     }
 
     // load in features
-    size_t features_size = files::binary_read <size_t>(file);
-    for (size_t g = 0; g < features_size; g++) {
-        size_t max_index = files::binary_read <size_t>(file);
-        vector <float>  values  = files::binary_read_vec <float> (file);
-        vector <size_t> indices = files::binary_read_vec <size_t>(file);
-        out._features.push_back(Sparse(max_index, values, indices));
+    size_t features_size = t[g++].cast<size_t>();
+    vector <size_t> features_max_index = t[g++].cast<vector <size_t>>();
+    vector <vector <size_t>> features_index = t[g++].cast<vector <vector <size_t>>>();
+    vector <vector <float>> features_value = t[g++].cast<vector <vector <float>>>();
+    for (size_t h = 0; h < features_size; h++) {
+        v._features.push_back(
+            Sparse(
+                features_max_index[h],
+                features_value[h],
+                features_index[h]
+            )
+        );
     }
 
-    // load in weights
-    out._weights = files::binary_read_vec <float>(file);
-
-    // close file
-    file.close();
+    // reconstruct weights
+    v._weights = t[g++].cast<vector <float>>();
 
     // return
-    return out;
+    return v;
 }
+#endif
 
 void VHash::_test() {
     _test_basic_creation();
@@ -166,7 +172,6 @@ void VHash::_test() {
     _test_weights();
     _test_vectorization();
     _test_transform();
-    _test_io();
 }
 
 void VHash::_create_table(
@@ -436,32 +441,4 @@ void VHash::_test_transform() {
     assert(maths::isclose(doc_vecs[2][2], 1));
     assert(doc_vecs[0][2] > doc_vecs[0][1]);
     assert(doc_vecs[2][0] > doc_vecs[2][1]);
-}
-
-void VHash::_test_io() {
-
-    // make data and train model
-    auto data = VHash::_get_test_data();
-    VHash vhash = VHash().fit(data.first, data.second);
-
-    // transform docs
-    vector <vector <float>> vecs = vhash.transform(data.first);
-
-    // save model to file
-    vhash.save("bin/test.bin");
-
-    // load model from file
-    VHash vhash2 = VHash::load("bin/test.bin");
-
-    // transform docs again
-    vector <vector <float>> vecs2 = vhash2.transform(data.first);
-
-    // check results
-    assert(vecs.size() == vecs2.size());
-    for (size_t g = 0; g < vecs.size(); g++) {
-        assert(vecs[g].size() == vecs2[g].size());
-        for (size_t h = 0; h < vecs[g].size(); h++) {
-            assert(vecs[g][h] == vecs2[g][h]);
-        }
-    }
 }

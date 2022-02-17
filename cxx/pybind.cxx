@@ -1,9 +1,14 @@
+#define __PYBIND_MODULE__
+
+#include <vector>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
 #include <vhash/vhash.h>
 
 namespace py = pybind11;
+using std::vector;
 
 
 PYBIND11_MODULE(vhash, m) {
@@ -136,34 +141,9 @@ PYBIND11_MODULE(vhash, m) {
             py::arg("docs")
         )
         .def(
-            "save",
-            &vhash::VHash::save,
-            R"STRING_LITERAL(
-                Save model to file
-
-                Parameters
-                ----------
-                fname: str
-                    name of output file
-            )STRING_LITERAL",
-            py::arg("fname")
-        )
-        .def_static(
-            "load",
-            &vhash::VHash::load,
-            R"STRING_LITERAL(
-                Load model from file
-
-                Parameters
-                ----------
-                fname: str
-                    name of input file
-
-                Returns
-                -------
-                VHash
-                    instance loaded from file
-            )STRING_LITERAL",
-            py::arg("fname")
+            py::pickle(
+                &vhash::VHash::__get_state__,
+                &vhash::VHash::__set_state__
+            )
         );
 }

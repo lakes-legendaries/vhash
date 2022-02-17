@@ -11,6 +11,12 @@ using std::unordered_map;
 using std::string;
 using std::vector;
 
+#ifndef __CXX_TESTING__
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+namespace py = pybind11;
+#endif
+
 
 namespace vhash {
 
@@ -67,17 +73,11 @@ namespace vhash {
                 const vector <string>& docs
             );
 
-            /* Save to file
-
-            Check out docs or cxx/pybind.cxx for full docstring
-             */
-            void save(const string& fname) const;
-
-            /* Load from file
-
-            Check out docs or cxx/pybind.cxx for full docstring
-             */
-            static VHash load(const string& fname);
+            // pickle support
+            #ifndef __CXX_TESTING__
+            static py::tuple __get_state__(const vhash::VHash&);
+            static VHash __set_state__(py::tuple);
+            #endif
 
             /* public access to testing private methods */
             static void _test();
@@ -163,7 +163,6 @@ namespace vhash {
             static void _test_weights();
             static void _test_vectorization();
             static void _test_transform();
-            static void _test_io();
     };
 }
 #endif
