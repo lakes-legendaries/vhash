@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logic Overview &mdash; vhash  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> vhash
+          </a>
+              <div class="version">
+                0.0.22
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Logic Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-by-step">Step-by-step</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#learning-a-term-vocabulary">Learning a term vocabulary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#weighting-terms">Weighting terms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-sparse-representations">Creating sparse representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#saving-features">Saving features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-dense-representations">Creating dense representations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">Developer Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">vhash</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Logic Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/logic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="logic-overview">
+<h1>Logic Overview<a class="headerlink" href="#logic-overview" title="Permalink to this headline"></a></h1>
+<p>Here, we provide an overview of the motivation and logic of this package.</p>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline"></a></h2>
+<p>Systems like BERT do a really good job vectorizing text documents for general
+purpose tasks. However, BERT performs less well on tasks in highly specific
+knowledege domains, and its training code is held in secret by Alphabet Inc.</p>
+<p>This package provides hash tables that can perform fast training and
+vectorization on documents with provided class labels, allowing you to
+customize your vector quantization to your own discrimination task.</p>
+</section>
+<section id="step-by-step">
+<h2>Step-by-step<a class="headerlink" href="#step-by-step" title="Permalink to this headline"></a></h2>
+<p>This document performs all of the following operations:</p>
+<ol class="arabic simple">
+<li><p>Learning a term vocabulary (fitting only)</p></li>
+<li><p>Weighting terms (fitting only)</p></li>
+<li><p>Creating sparse representations of documents</p></li>
+<li><p>Saving features for dense vectorization (fitting only)</p></li>
+<li><p>Creating information-rich dense representations by comparing against the
+saved features (transforming only)</p></li>
+</ol>
+<p>When fitting, the model performs (1), (2), (3), and (4).</p>
+<p>When transforming, the model performs (3) and (5).</p>
+</section>
+<section id="learning-a-term-vocabulary">
+<h2>Learning a term vocabulary<a class="headerlink" href="#learning-a-term-vocabulary" title="Permalink to this headline"></a></h2>
+<p>This class will take the documents it is supplied during training, and keep all
+terms and phrases that occur frequently across all training documents.</p>
+<p>This class uses an n-gram approach, where each document is broken up into all
+possible words and phrases consisting of anywhere from <code class="code docutils literal notranslate"><span class="pre">1</span></code> to <code class="code docutils literal notranslate"><span class="pre">n</span></code>
+consecutive words. Each word and phrase is then inserted into a hash table, and
+a running count of the number of instances of each word and phrase across all
+training documents is kept.</p>
+<p>All words and phrases that occur infrequently are removed from the hash table
+(and thus eliminated from this model’s vocabulary).</p>
+</section>
+<section id="weighting-terms">
+<h2>Weighting terms<a class="headerlink" href="#weighting-terms" title="Permalink to this headline"></a></h2>
+<p>To compute a phrase’s weight:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Compute the phrase’s document frequency. A phrase’s document frequency
+is the number of documents it appears in in the training set.</p></li>
+<li><p>Compute the phrase’s expected document frequency, if it were evenly
+distributed among all classes. E.g. if a phrase appears in 82% of
+documents, we’d expect that phrase to occur in 82% of the documents
+belonging to each class, if that phrase were evenly distributed.</p></li>
+<li><p>Compute the actual document frequency of each class. E.g. a term might
+occur in 20% of the documents from one class, and 90% of the documents from
+another class.</p></li>
+<li><p>Compute each phrase’s weight as:</p>
+<div class="math notranslate nohighlight">
+\[\sqrt( \sum_c( |expected\_freq_c - actual\_freq_c|^2 ) )\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sum_c\)</span> is the sum over each class, <span class="math notranslate nohighlight">\(expected\_freq_c\)</span> is the
+expected frequency for class <span class="math notranslate nohighlight">\(c\)</span>, and <span class="math notranslate nohighlight">\(actual\_freq_c\)</span> is the actual
+frequency for class <span class="math notranslate nohighlight">\(c\)</span>.</p>
+</li>
+</ol>
+</div></blockquote>
+</section>
+<section id="creating-sparse-representations">
+<h2>Creating sparse representations<a class="headerlink" href="#creating-sparse-representations" title="Permalink to this headline"></a></h2>
+<p>To create a sparse representation of a document:</p>
+<ol class="arabic">
+<li><p>Each phrase in the document that exists in the hash table is counted.
+This creates a sparse integer array, where each index in the array
+corresponds to a single phrase.</p></li>
+<li><p>The count of each phrase is transformed via</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">count</span> <span class="o">-&gt;</span> <span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">count</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This creates a sparse floating-point array.</p>
+</li>
+<li><p>Each phrase is multiplied by its weight. This modifies the existing
+sparse floating-point array.</p></li>
+<li><p>This sparse floating-point array is L2 normalized.</p></li>
+</ol>
+</section>
+<section id="saving-features">
+<h2>Saving features<a class="headerlink" href="#saving-features" title="Permalink to this headline"></a></h2>
+<p>During training, a number of features will be saved for later comparison.
+Features are simply documents that were used during fitting, and are saved by
+the model. These documents are converted into sparse arrays following the
+procedure listed above.</p>
+</section>
+<section id="creating-dense-representations">
+<h2>Creating dense representations<a class="headerlink" href="#creating-dense-representations" title="Permalink to this headline"></a></h2>
+<p>To transform a document’s sparse vector into an information-rich dense vector,
+compute the dot product between that sparse vector and every saved feature’s
+sparse vector.</p>
+<p>A dense vector can be described as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dense_vector</span><span class="p">[</span><span class="n">feature_num</span><span class="p">]</span> <span class="o">=</span> <span class="n">sparse_vector</span> <span class="o">*</span> <span class="n">feature</span><span class="p">[</span><span class="n">feature_num</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021 Lake&#39;s Legendaries LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
