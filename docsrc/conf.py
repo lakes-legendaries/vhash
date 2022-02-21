@@ -1,5 +1,5 @@
 project = 'vhash'
-version = '0.0.21'
+version = '0.0.22'
 copyright = '2021 Lake\'s Legendaries LLC'
 author = 'Mike Powell PhD'
 
