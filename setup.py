@@ -35,7 +35,7 @@ if __name__ == '__main__':
             'nptyping',
             'numpy',
         ],
-        python_requires='>=3.7',
+        python_requires='>=3.8',
 
         # urls
         project_urls={
