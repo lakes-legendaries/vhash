@@ -163,6 +163,7 @@ namespace vhash {
             static void _test_weights();
             static void _test_vectorization();
             static void _test_transform();
+            static void _test_null();
     };
 }
 #endif

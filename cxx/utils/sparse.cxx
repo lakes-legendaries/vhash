@@ -12,6 +12,7 @@ Sparse::Sparse(
    indices(indices_) {}
 
 float Sparse::dot_product(const Sparse& multiplier) const {
+    if (multiplier.num_nonzero() == 0) {return 0;}
     float out = 0;
     for (size_t i = 0, m_i = 0; i < num_nonzero(); i++) {
         while (indices[i] > multiplier.indices[m_i]) {

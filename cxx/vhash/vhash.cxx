@@ -172,6 +172,7 @@ void VHash::_test() {
     _test_weights();
     _test_vectorization();
     _test_transform();
+    _test_null();
 }
 
 void VHash::_create_table(
@@ -441,4 +442,14 @@ void VHash::_test_transform() {
     assert(maths::isclose(doc_vecs[2][2], 1));
     assert(doc_vecs[0][2] > doc_vecs[0][1]);
     assert(doc_vecs[2][0] > doc_vecs[2][1]);
+}
+
+void VHash::_test_null() {
+    auto data = VHash::_get_test_data();
+    data.first[1] = "";
+    VHash vhash = VHash().fit(data.first, data.second);
+    data.first[1] = VHash::_get_test_data().first[1];
+    vhash.transform(data.first);
+    data.first[1] = "";
+    vhash.transform(data.first);
 }
