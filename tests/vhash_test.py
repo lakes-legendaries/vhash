@@ -5,7 +5,6 @@ from math import isclose
 from typing import Any
 
 from nptyping import NDArray
-from numpy import array
 
 from vhash import VHash
 
@@ -32,24 +31,24 @@ def check_result(transformed: NDArray[(Any, Any), float]):
 def test_fit():
     docs, labels = get_data()
     vhash = VHash().fit(docs, labels)
-    transformed = array(vhash.transform(docs))
+    transformed = vhash.transform(docs)
     check_result(transformed)
-    assert((array(vhash.transform(['name'])) == 0).all())
+    assert((vhash.transform(['name']) == 0).all())
 
 
 def test_fit_transform():
     docs, labels = get_data()
-    transformed = array(VHash().fit_transform(docs, labels))
+    transformed = VHash().fit_transform(docs, labels)
     check_result(transformed)
 
 
 def test_pickle():
     docs, labels = get_data()
     model = VHash().fit(docs, labels)
-    transformed = array(model.transform(docs))
+    transformed = model.transform(docs)
     model2 = deepcopy(model)
     model = None
-    transformed2 = array(model2.transform(docs))
+    transformed2 = model2.transform(docs)
     assert((transformed == transformed2).all())
 
 

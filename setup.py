@@ -31,7 +31,10 @@ if __name__ == '__main__':
         packages=find_packages(),
 
         # requirements
-        install_requires=[],
+        install_requires=[
+            'nptyping',
+            'numpy',
+        ],
         python_requires='>=3.7',
 
         # urls
@@ -52,7 +55,7 @@ if __name__ == '__main__':
         cmdclass={"build_ext": build_ext},
         ext_modules=[
             Pybind11Extension(
-                "vhash",
+                "_vhash",
                 cxx_files,
                 include_dirs=[path.join(path.dirname(__file__), 'cxx')],
             ),

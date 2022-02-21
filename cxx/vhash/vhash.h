@@ -30,7 +30,7 @@ namespace vhash {
 
             /* Constructor
 
-            Check out docs or cxx/pybind.cxx for full docstring
+            Check out docs or vhash/vhash.py for full docstring
              */
             VHash(
                 const size_t& largest_ngram = 3,
@@ -43,13 +43,13 @@ namespace vhash {
 
             /* virtual destructor
 
-            Check out docs or cxx/pybind.cxx for full docstring
+            Check out docs or vhash/vhash.py for full docstring
              */
             virtual ~VHash() {}
 
             /* Train model
 
-            Check out docs or cxx/pybind.cxx for full docstring
+            Check out docs or vhash/vhash.py for full docstring
              */
             VHash fit(
                 const vector <string>& docs,
@@ -58,7 +58,7 @@ namespace vhash {
 
             /* Fit model, transform docs
 
-            Check out docs or cxx/pybind.cxx for full docstring
+            Check out docs or vhash/vhash.py for full docstring
              */
            vector <vector <float>> fit_transform(
                 const vector <string>& docs,
@@ -67,7 +67,7 @@ namespace vhash {
 
             /* Transform docs, using fitted model
 
-            Check out docs or cxx/pybind.cxx for full docstring
+            Check out docs or vhash/vhash.py for full docstring
              */
             vector <vector <float>> transform(
                 const vector <string>& docs
