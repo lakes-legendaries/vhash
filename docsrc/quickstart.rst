@@ -21,6 +21,8 @@ intuitive and familiar interface.
 
 .. code-block:: python
 
+   from nptyping import NDArray
+   
    from vhash import VHash
 
 
@@ -36,4 +38,4 @@ intuitive and familiar interface.
     vhash = VHash().fit(docs, labels)
 
     # create numeric representation
-    numeric: list[list[float]] = vhash.transform(docs)
+    numeric: NDArray[(Any, Any), float] = vhash.transform(docs)
