@@ -53,6 +53,14 @@ intuitive and familiar interface.
     # create numeric representation (2D float array)
     numeric: NDArray[(Any, Any), float] = vhash.transform(docs)
 
+*******
+Metrics
+*******
+
+To see how this text transformer compares to BERT, check out the
+`sample notebook <https://github.com/lakes-legendaries/vhash/blob/main/stats/bert.ipynb>`_,
+where we show how :code:`vhash` outperforms :code:`sBERT` on a sentiment analysis task.
+
 .. docs-links
 
 *************
