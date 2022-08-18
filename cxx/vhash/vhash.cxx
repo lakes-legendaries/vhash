@@ -16,14 +16,16 @@ VHash::VHash(
     const size_t& num_features,
     const size_t& max_num_phrases,
     const size_t& downsample_to,
-    const size_t& live_evaluation_step
+    const size_t& live_evaluation_step,
+    const size_t& smallest_ngram
 ):
     _largest_ngram(largest_ngram),
     _min_phrase_occurrence(min_phrase_occurrence),
     _num_features(num_features),
     _max_num_phrases(max_num_phrases),
     _downsample_to(downsample_to),
-    _live_evaluation_step(live_evaluation_step) {
+    _live_evaluation_step(live_evaluation_step),
+    _smallest_ngram(smallest_ngram) {
 }
 
 VHash VHash::fit(
@@ -102,6 +104,7 @@ py::tuple VHash::__get_state__(const vhash::VHash &v) {
         v._max_num_phrases,
         v._downsample_to,
         v._live_evaluation_step,
+        v._smallest_ngram,
         v._num_docs,
         hash_size,
         hash_keys,
@@ -127,6 +130,7 @@ VHash VHash::__set_state__(py::tuple t) {
     v._max_num_phrases = t[g++].cast<size_t>();
     v._downsample_to = t[g++].cast<size_t>();
     v._live_evaluation_step = t[g++].cast<size_t>();
+    v._smallest_ngram = t[g++].cast<size_t>();
     v._num_docs = t[g++].cast<size_t>();
 
     // reconstruct hash table
@@ -312,7 +316,7 @@ void VHash::_make_features(
 
 vector <string> VHash::_break_into_phrases(const string& doc) const {
     vector <string> out;
-    for (size_t phrase_len = 1; phrase_len <= _largest_ngram; phrase_len++) {
+    for (size_t phrase_len = _smallest_ngram; phrase_len <= _largest_ngram; phrase_len++) {
         vector <string> phrases = text::get_phrases(doc, phrase_len);
         out.insert(out.end(), phrases.begin(), phrases.end());
     }

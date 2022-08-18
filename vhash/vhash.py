@@ -16,8 +16,8 @@ class VHash(_VHash):
     ----------
     largest_ngram: int, optional, default=3
         Maximum number of words to take as a single phrase. This table's
-        vocabulary will consist of phrases from 1 word long to
-        :code:`largest_ngram` words long.
+        vocabulary will consist of phrases from :code:`smallest_ngram`-words
+        long to :code:`largest_ngram`-words long.
     min_phrase_occurrence: float, default=1E-3
         Only the most common phrases are kept. Uncommon phrases are removed if
         the total count of that phrase across all training documents meets the
@@ -44,6 +44,10 @@ class VHash(_VHash):
     live_evaluation_step: int, optional, default=10E3
         when fitting a table, to speed things up, infrequent terms are removed
         every :code:`live_evaluation_step` number of documents
+    smallest_ngram: int, optional, default=1
+        Minimum number of words to take as a single phrase. This table's
+        vocabulary will consist of phrases from :code:`smallest_ngram`-words
+        long to :code:`largest_ngram`-words long.
     """
 
     def fit(

@@ -38,7 +38,8 @@ namespace vhash {
                 const size_t& num_features = 1000,
                 const size_t& max_num_phrases = 1E6,
                 const size_t& downsample_to = 100E3,
-                const size_t& live_evaluation_step = 10E3
+                const size_t& live_evaluation_step = 10E3,
+                const size_t& smallest_ngram = 1
             );
 
             /* virtual destructor
@@ -93,6 +94,7 @@ namespace vhash {
             size_t _max_num_phrases;
             size_t _downsample_to;
             size_t _live_evaluation_step;
+            size_t _smallest_ngram;
 
             // ===============================================================
             // fitting helper variables

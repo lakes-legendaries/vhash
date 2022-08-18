@@ -21,6 +21,7 @@ PYBIND11_MODULE(_vhash, m) {
                 const size_t&,
                 const size_t&,
                 const size_t&,
+                const size_t&,
                 const size_t&
             >(),
             py::arg("largest_ngram") = (size_t)3,
@@ -28,7 +29,8 @@ PYBIND11_MODULE(_vhash, m) {
             py::arg("num_features") = (size_t)1000,
             py::arg("max_num_phrases") = (size_t)1E6,
             py::arg("downsample_to") = (size_t)100E3,
-            py::arg("live_evaluation_step") = (size_t)10E3
+            py::arg("live_evaluation_step") = (size_t)10E3,
+            py::arg("smallest_ngram") = (size_t)1
         )
         .def(
             "fit",
