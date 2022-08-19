@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; vhash  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Developer Notes" href="dev.html" />
+    <link rel="prev" title="Logic Overview" href="logic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> vhash
+          </a>
+              <div class="version">
+                0.0.27
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="logic.html">Logic Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#vhash">VHash</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev.html">Developer Notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">vhash</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<span id="api"></span><h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
+<section id="vhash">
+<h2>VHash<a class="headerlink" href="#vhash" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="vhash.VHash">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vhash.</span></span><span class="sig-name descname"><span class="pre">VHash</span></span><a class="headerlink" href="#vhash.VHash" title="Permalink to this definition"></a></dt>
+<dd><p>Vectorizing hash table for fast quantization of text documents</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>largest_ngram: int, optional, default=3</strong></dt><dd><p>Maximum number of words to take as a single phrase. This table’s
+vocabulary will consist of phrases from <code class="code docutils literal notranslate"><span class="pre">smallest_ngram</span></code>-words
+long to <code class="code docutils literal notranslate"><span class="pre">largest_ngram</span></code>-words long.</p>
+</dd>
+<dt><strong>min_phrase_occurrence: float, default=1E-3</strong></dt><dd><p>Only the most common phrases are kept. Uncommon phrases are removed if
+the total count of that phrase across all training documents meets the
+following criteria:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">min_phrase_occurrence</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">min_count</span> <span class="o">=</span> <span class="n">min_phrase_occurrence</span> <span class="o">*</span> <span class="n">docs</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">min_count</span> <span class="o">=</span> <span class="n">min_phrase_occurrence</span>
+<span class="n">remove</span> <span class="kn">from</span> <span class="nn">table</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="n">min_count</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>num_features: int, optional, default=1E3</strong></dt><dd><p>number of features to compute (which equals the dimension of each
+output dense vector). If fewer training documents than this are used
+when fitting, then <code class="code docutils literal notranslate"><span class="pre">num_features</span></code> will be reduced to the number
+of training documents.</p>
+</dd>
+<dt><strong>max_num_phrases: int, optional, default=1E6</strong></dt><dd><p>maximum size of term vocabulary, including phrases of all lengths</p>
+</dd>
+<dt><strong>downsample_to: int, optional, default=100E3</strong></dt><dd><p>maximum number of documents to use when fitting. If more are provided,
+then documents are downsampled</p>
+</dd>
+<dt><strong>live_evaluation_step: int, optional, default=10E3</strong></dt><dd><p>when fitting a table, to speed things up, infrequent terms are removed
+every <code class="code docutils literal notranslate"><span class="pre">live_evaluation_step</span></code> number of documents</p>
+</dd>
+<dt><strong>smallest_ngram: int, optional, default=1</strong></dt><dd><p>Minimum number of words to take as a single phrase. This table’s
+vocabulary will consist of phrases from <code class="code docutils literal notranslate"><span class="pre">smallest_ngram</span></code>-words
+long to <code class="code docutils literal notranslate"><span class="pre">largest_ngram</span></code>-words long.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#vhash.VHash.fit" title="vhash.VHash.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(docs, labels)</p></td>
+<td><p>Fit model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#vhash.VHash.fit_transform" title="vhash.VHash.fit_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_transform</span></code></a>(docs, labels)</p></td>
+<td><p>Fit model, get numeric representation of docs</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#vhash.VHash.transform" title="vhash.VHash.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(docs)</p></td>
+<td><p>Get numeric representation of docs</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="vhash.VHash.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#vhash.VHash" title="vhash.vhash.VHash"><span class="pre">vhash.vhash.VHash</span></a></span></span><a class="headerlink" href="#vhash.VHash.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>docs: list[str]</strong></dt><dd><p>documents to use to train model</p>
+</dd>
+<dt><strong>labels: list</strong></dt><dd><p>class label for each document</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>VHash</dt><dd><p>Calling instance</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vhash.VHash.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nptyping.types._ndarray.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">nptyping.types._number.Float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#vhash.VHash.fit_transform" title="Permalink to this definition"></a></dt>
+<dd><p>Fit model, get numeric representation of docs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>docs: list[str]</strong></dt><dd><p>documents to use to train model</p>
+</dd>
+<dt><strong>labels: list</strong></dt><dd><p>class label for each document</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>numeric: NDArray([Any, Any], float)</dt><dd><p>Numeric representation of documents.
+<code class="code docutils literal notranslate"><span class="pre">rep[x]</span></code> is for <code class="code docutils literal notranslate"><span class="pre">docs[x]</span></code>.
+<code class="code docutils literal notranslate"><span class="pre">rep[x].size()</span> <span class="pre">==</span> <span class="pre">num_features</span></code> (set in constructor)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vhash.VHash.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nptyping.types._ndarray.NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">nptyping.types._number.Float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#vhash.VHash.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Get numeric representation of docs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>docs: list[str]</strong></dt><dd><p>documents to numerically represent</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>numeric: NDArray([Any, Any], float)</dt><dd><p>Numeric representation of documents.
+<code class="code docutils literal notranslate"><span class="pre">rep[x]</span></code> is for <code class="code docutils literal notranslate"><span class="pre">docs[x]</span></code>.
+<code class="code docutils literal notranslate"><span class="pre">rep[x].size()</span> <span class="pre">==</span> <span class="pre">num_features</span></code> (set in constructor)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="logic.html" class="btn btn-neutral float-left" title="Logic Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dev.html" class="btn btn-neutral float-right" title="Developer Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021 Lake&#39;s Legendaries LLC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
