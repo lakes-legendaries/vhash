@@ -285,7 +285,7 @@ void VHash::_compute_weights(
         for (size_t class_num = 0; class_num < num_classes; class_num++) {
             if (!docs_in_class[class_num]) {continue;}
             float actual_occurrence = doc_freq[phrase_index][class_num] / (float)docs_in_class[class_num];
-            float difference_from_expectation = expected_occurrence - actual_occurrence;
+            float difference_from_expectation = (expected_occurrence - actual_occurrence) / expected_occurrence;
             _weights[phrase_index] += pow(difference_from_expectation, 2);
         }
 
@@ -407,8 +407,8 @@ void VHash::_test_assigned_indices() {
 void VHash::_test_weights() {
     auto data = VHash::_get_test_data();
     VHash vhash = VHash().fit(data.first, data.second);
-    assert(maths::isclose(vhash._weights[vhash._table.find("hi")->second], 0.372677996));
-    assert(maths::isclose(vhash._weights[vhash._table.find("mike")->second], 0.745355992));
+    assert(vhash._weights[vhash._table.find("mike")->second] > vhash._weights[vhash._table.find("hi")->second]);
+    assert(vhash._weights[vhash._table.find("george")->second] > vhash._weights[vhash._table.find("mike")->second]);
     assert(maths::isclose(vhash._weights[vhash._table.find("name")->second], 0));
 }
 
