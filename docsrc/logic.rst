@@ -57,52 +57,29 @@ All words and phrases that occur infrequently are removed from the hash table
 Weighting terms
 ***************
 
-To compute a phrase's weight:
+Each term's / phrase's weight is computed as
 
-    #. Compute the phrase's document frequency. A phrase's document frequency
-       is the number of documents it appears in in the training set.
+.. math::
 
-    #. Compute the phrase's expected document frequency, if it were evenly
-       distributed among all classes. E.g. if a phrase appears in 82% of
-       documents, we'd expect that phrase to occur in 82% of the documents
-       belonging to each class, if that phrase were evenly distributed.
-    
-    #. Compute the actual document frequency of each class. E.g. a term might
-       occur in 20% of the documents from one class, and 90% of the documents from
-       another class.
+   w(t) = \sqrt{ \sum_c \bigg[ \bigg| \frac{f_e(t) - f_o(t, c)}{f_e(t)} \bigg|^2 \bigg] }
 
-    #. Compute each phrase's weight as:
-
-       .. math::
-
-          \sqrt( \sum_c( |expected\_freq_c - actual\_freq_c|^2 ) )
-    
-       where :math:`\sum_c` is the sum over each class, :math:`expected\_freq_c` is the
-       expected frequency for class :math:`c`, and :math:`actual\_freq_c` is the actual
-       frequency for class :math:`c`.
+where :math:`w(t)` is the weight of term :math:`t`, :math:`f_e(t)` is the
+(expected) frequency of term :math:`t` across all classes, and :math:`f_o(t,
+c)` is the observed frequency of term :math:`t` in class :math:`c`.
 
 *******************************
 Creating sparse representations
 *******************************
 
-To create a sparse representation of a document:
+Documents are transformed into sparse representations via:
 
-#. Each phrase in the document that exists in the hash table is counted.
-   This creates a sparse integer array, where each index in the array
-   corresponds to a single phrase.
+.. math::
 
-#. The count of each phrase is transformed via
+   s(t) = \log{ \big( 1 + c(t) \big) } \times w(t)
 
-   .. code-block:: python
-        
-      count -> log(1 + count)
-
-   This creates a sparse floating-point array.
-
-#. Each phrase is multiplied by its weight. This modifies the existing
-   sparse floating-point array.
-
-#. This sparse floating-point array is L2 normalized.
+where :math:`s(t)` is the sparse representation of term :math:`t` (for any
+given article), :math:`c(t)` is the count of term :math:`t` in the article, and
+:math`w(t)` is the weight of term :math:`t` (calculated above).
 
 ***************
 Saving features
@@ -113,16 +90,23 @@ Features are simply documents that were used during fitting, and are saved by
 the model. These documents are converted into sparse arrays following the
 procedure listed above.
 
+Each saved article is referred to as an :math:`\alpha` article.
+
 ******************************
 Creating dense representations
 ******************************
 
 To transform a document's sparse vector into an information-rich dense vector,
-compute the dot product between that sparse vector and every saved feature's
-sparse vector.
+compute the cosine similarity between that sparse vector and every saved
+:math:'\alpha` feature's sparse vector.
 
-A dense vector can be described as:
+A document's dense vector can be described as:
 
-.. code-block:: python
+.. math::
 
-    dense_vector[feature_num] = sparse_vector * feature[feature_num]
+   d(\alpha) = \frac{\vec s}{||\vec s||^2} \cdot \frac{\vec \alpha}{||\vec \alpha||^2}
+
+where :math:`d(\alpha)` is :math:`\alpha`'th vector index in the dense
+representation of the article, :math:`\vec s` is the sparse representation of
+the article (computed above), and :math:`\alpha` is the sparse representation
+of the previously-saved :math:`\alpha` feature article.
